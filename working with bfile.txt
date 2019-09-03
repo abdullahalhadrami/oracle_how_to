@@ -1,0 +1,35 @@
+-- step1:DBA user should create database directory object that point to the directory which contains the files
+/*
+this step has to be done by the DBA user such as sys
+First move to pluggable database "orclpdb" because hr schema exist there
+alter session set container=orclpdb;
+Now create the directory as following 
+create directory  LOBDIR as 'C:\Users\home\Desktop\LOB';
+*/
+
+--step2:grant permision to user HR to access the directoy
+/*
+this step also has to be done by DBA user
+GRANT READ,WRITE ON DIRECTORY LOBDIR TO HR;
+*/
+
+--step3:go to sql developer and create table in HR schema
+drop table mobiles2;
+create table mobiles2(
+mobile_id number(4),
+mobile_name varchar2(15),
+price number(5),
+mobile_desc bfile,
+mobile_photo bfile);
+truncate table mobiles2;
+
+--step4:insert data into the table
+insert into mobiles2 values(1001,'OPPO F11',350,bfilename('LOBDIR','OPPOF11_DESC.txt')
+                                             ,bfilename('LOBDIR','oppof11_photo.jpg'));
+
+--Retrieve the data from the table
+select * from mobiles2;
+
+
+
+
